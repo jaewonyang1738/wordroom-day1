@@ -10,7 +10,7 @@
 <div class="top"><div class="brand">WORDROOM</div><div class="day">오늘 · 2026.08.27</div></div>
 <h1>Day 01<br><span style="color:var(--green)">Business essentials</span></h1><p>일의 흐름을 말하는 핵심 단어 20개</p>
 <section class="hero"><p>오늘의 학습 진행률</p><div class="progress"><div class="bar" id="bar"></div></div><div class="stats"><span><b id="doneCount">0</b>완료</span><span><b id="reviewCount">0</b>다시 보기</span><span><b id="leftCount">20</b>남음</span></div></section>
-<div class="tabs"><button class="active" data-filter="all">전체 20</button><button data-filter="done">✅ 완료</button><button data-filter="review">🔁 다시 보기</button><button data-filter="miss">⏳ 미완료</button><button id="quizBtn">복습 퀴즈</button></div>
+<div class="tabs"><button class="active" data-filter="all">전체 20</button><button data-filter="done">✅ 완료</button><button data-filter="review">🔁 다시 보기</button><button data-filter="miss">⏳ 미완료</button><button id="quizBtn">복습 퀴즈</button></div><div style="display:flex;gap:8px;margin-bottom:14px"><button class="filter" onclick="backup()">⬇️ 백업</button><button class="filter" onclick="document.getElementById('restore').click()">⬆️ 복원</button><button class="filter" onclick="shareTelegram()">✈️ 텔레그램</button><input id="restore" type="file" accept="application/json" hidden onchange="restore(event)"></div>
 <section class="words" id="words"></section><section class="quiz" id="quiz"><h2>오늘의 미니 퀴즈</h2><p>단어를 실제 상황에서 떠올려보세요.</p><div id="quizBody"></div></section><div class="foot">단어를 누르면 상태가 이 기기에 자동 저장됩니다.</div>
 </main>
 <script>
@@ -23,5 +23,8 @@ function setStatus(i,s){state[i]=state[i]===s?'':s;save()}
 document.querySelectorAll('.tabs button[data-filter]').forEach(b=>b.onclick=()=>{document.querySelectorAll('.tabs button').forEach(x=>x.classList.remove('active'));b.classList.add('active');filter=b.dataset.filter;render()});
 quizBtn.onclick=()=>{quiz.classList.toggle('show'); if(quiz.classList.contains('show')) makeQuiz()};
 function makeQuiz(){let qs=[[0,'align',['할당하다','의견을 일치시키다','협상하다']], [8,'feedback',['마감 기한','피드백, 의견','결과물']], [10,'implement',['검색하다','실행하다','조율하다']]];quizBody.innerHTML=qs.map((q,n)=>`<div class="q">${n+1}. “${q[1]}”의 뜻은?</div><div class="answers">${q[2].map(a=>`<button onclick="this.classList.add('${a===q[2][1]?'correct':'wrong'}')">${a}</button>`).join('')}</div>`).join('')}
+function backup(){let blob=new Blob([JSON.stringify({version:1,exportedAt:new Date().toISOString(),state},null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='wordroom-backup.json';a.click();URL.revokeObjectURL(a.href)}
+function restore(e){let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{try{let x=JSON.parse(r.result);if(!x.state)throw Error();state=x.state;save();alert('복원되었습니다.')}catch(_){alert('올바른 Wordroom 백업 파일이 아닙니다.')}};r.readAsText(f)}
+function shareTelegram(){let done=Object.values(state).filter(x=>x==='done').length,review=Object.values(state).filter(x=>x==='review').length,text=`Wordroom Day 01 학습 현황\\n✅ 완료 ${done}개\\n🔁 다시 보기 ${review}개\\n\\nhttps://jaewonyang1738.github.io/wordroom-day1/`;location.href='https://t.me/share/url?url='+encodeURIComponent('https://jaewonyang1738.github.io/wordroom-day1/')+'&text='+encodeURIComponent(text)}
 render();
 </script></body></html>
