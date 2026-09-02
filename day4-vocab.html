@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Wordroom · Day 04</title>
+<link rel="manifest" href="wordroom-manifest.json">
+<meta name="theme-color" content="#2f6b4f">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Wordroom">
+<style>
+:root{--ink:#17211b;--muted:#718078;--paper:#f7f8f3;--card:#fff;--line:#e5e9e1;--green:#2f6b4f;--mint:#e7f0e8;--yellow:#f6e8b0;--red:#f8e2de;--shadow:0 10px 30px #2036290d}*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Pretendard",sans-serif}main{max-width:720px;margin:auto;padding:22px 18px 100px}.top{display:flex;justify-content:space-between;align-items:center}.brand{font-size:13px;letter-spacing:2px;font-weight:800;color:var(--green)}.day{font-size:13px;color:var(--muted)}h1{font-size:31px;line-height:1.15;margin:30px 0 8px;letter-spacing:-1px}p{color:var(--muted);margin:0}.hero{margin:26px 0 18px;background:var(--green);color:white;border-radius:24px;padding:22px;box-shadow:var(--shadow)}.hero p{color:#d8e7da;font-size:13px}.progress{height:7px;background:#ffffff30;border-radius:99px;margin-top:20px;overflow:hidden}.bar{height:100%;width:0;background:#f5df8d;border-radius:99px;transition:.3s}.stats{display:flex;gap:8px;margin-top:13px}.stat{font-size:12px;color:#e2eee3}.stat b{color:white;font-size:17px;margin-right:3px}.tabs{display:flex;gap:8px;overflow:auto;margin:22px 0 14px}.tabs button{border:1px solid var(--line);background:white;color:var(--muted);border-radius:99px;padding:10px 15px;white-space:nowrap;font-size:13px}.tabs button.active{background:var(--ink);color:white;border-color:var(--ink)}.word{background:var(--card);border:1px solid var(--line);border-radius:19px;padding:18px;margin:10px 0;box-shadow:var(--shadow)}.wordtop{display:flex;justify-content:space-between;align-items:flex-start}.num{font-size:12px;color:#9ba69f}.tag{font-size:11px;background:var(--mint);color:var(--green);padding:5px 8px;border-radius:7px}.en{font-size:22px;font-weight:800;margin:10px 0 3px}.pos{font-size:12px;color:var(--muted);font-weight:500}.meaning{font-size:14px;margin-bottom:12px}.example{background:#f7f8f4;border-radius:11px;padding:11px 12px;font-size:13px;line-height:1.5}.example em{display:block;color:var(--muted);font-style:normal;margin-top:3px}.actions{display:flex;gap:7px;margin-top:13px}.actions button{flex:1;min-height:42px;border-radius:11px;border:1px solid var(--line);background:white;font-size:12px;color:var(--muted);cursor:pointer}.actions .done.sel{background:var(--mint);border-color:#a8c8ae;color:var(--green);font-weight:700}.actions .review.sel{background:var(--yellow);border-color:#e6ce74;color:#806719;font-weight:700}.actions .miss.sel{background:var(--red);border-color:#e9aaa0;color:#a44b40;font-weight:700}.quiz{display:none;background:white;border:1px solid var(--line);border-radius:20px;padding:22px;margin-top:16px}.quiz.show{display:block}.quiz h2{margin:0 0 8px;font-size:20px}.q{font-weight:700;margin:18px 0 10px}.answers{display:grid;gap:8px}.answers button{text-align:left;padding:12px;border:1px solid var(--line);background:white;border-radius:10px}.answers button.correct{background:var(--mint);border-color:#a8c8ae}.answers button.wrong{background:var(--red);border-color:#e9aaa0}.empty{text-align:center;color:var(--muted);padding:40px 0}.foot{text-align:center;font-size:12px;color:#9ba69f;margin-top:30px}@media(min-width:600px){main{padding-top:34px}.words{display:grid;grid-template-columns:1fr 1fr;gap:10px}.word{margin:0}}
+</style>
+</head>
+<body><main>
+<div class="top"><div class="brand">WORDROOM</div><div class="day" id="todayLabel"></div></div>
+<h1 id="title">Day 04<br><span style="color:var(--green)">Business performance</span></h1>
+<p>성과와 재무 운영에서 바로 쓰는 새로운 핵심 단어 20개</p>
+<section class="hero"><p>오늘의 학습 진행률</p><div class="progress"><div class="bar" id="bar"></div></div><div class="stats"><span><b id="doneCount">0</b>완료</span><span><b id="reviewCount">0</b>다시 보기</span><span><b id="leftCount">20</b>남음</span></div></section>
+<div class="tabs"><button class="active" data-filter="all">전체 20</button><button data-filter="done">✅ 완료</button><button data-filter="review">🔁 다시 보기</button><button data-filter="miss">⏳ 미완료</button><button id="quizBtn">복습 퀴즈</button></div>
+<section class="words" id="words"></section>
+<section class="quiz" id="quiz"><h2>오늘의 미니 퀴즈</h2><p>단어를 실제 상황에서 떠올려보세요.</p><div id="quizBody"></div></section>
+<div class="foot">단어 상태는 이 기기에 자동 저장됩니다.</div>
+</main>
+<script>
+const DAY_NUMBER=4, DAY_LABEL=String(DAY_NUMBER).padStart(2,'0'), DAY_KEY='wordroom-day4';
+const data=[
+ ['accrue','v.','(이자·혜택 등이) 누적되다','Interest will accrue on the outstanding balance.','미지급 잔액에 이자가 누적됩니다.','FINANCE'],
+ ['actionable','adj.','실행 가능한, 조치로 옮길 수 있는','The report gives us actionable recommendations.','그 보고서는 실행 가능한 권고안을 제시합니다.','STRATEGY'],
+ ['bottleneck','n.','병목, 지연을 일으키는 지점','Approval is the main bottleneck in the process.','승인이 그 과정의 주요 병목입니다.','OPERATIONS'],
+ ['capacity','n.','수용 능력, 처리 역량','Our support team has the capacity to serve more clients.','우리 지원팀은 더 많은 고객을 처리할 역량이 있습니다.','OPERATIONS'],
+ ['credible','adj.','신뢰할 만한, 믿을 수 있는','We need a credible forecast before investing.','투자하기 전에 신뢰할 만한 전망이 필요합니다.','FINANCE'],
+ ['customer-centric','adj.','고객 중심의','A customer-centric culture improves loyalty.','고객 중심의 문화는 충성도를 높입니다.','CUSTOMER'],
+ ['defer','v.','미루다, 연기하다','We decided to defer the expansion until next quarter.','우리는 확장을 다음 분기까지 미루기로 했습니다.','STRATEGY'],
+ ['due diligence','n.','실사, 사전 조사','The team completed due diligence before the acquisition.','팀은 인수 전에 실사를 완료했습니다.','FINANCE'],
+ ['arbitrage','n.','차익 거래','The fund uses arbitrage to benefit from price differences.','그 펀드는 가격 차이에서 이익을 얻기 위해 차익 거래를 합니다.','FINANCE'],
+ ['expenditure','n.','지출, 비용','Capital expenditure increased during the upgrade.','업그레이드 기간에 자본 지출이 증가했습니다.','FINANCE'],
+ ['fiscal','adj.','재정의, 회계의','The board approved the fiscal-year budget.','이사회는 회계연도 예산을 승인했습니다.','FINANCE'],
+ ['breakeven','n.','손익분기점','The new store should reach breakeven within a year.','새 매장은 1년 안에 손익분기점에 도달해야 합니다.','FINANCE'],
+ ['merger','n.','합병','The merger created a stronger regional competitor.','그 합병은 더 강력한 지역 경쟁사를 만들었습니다.','STRATEGY'],
+ ['pipeline','n.','진행 중인 업무·영업 건의 목록','Our sales pipeline is healthy for the next quarter.','우리 영업 파이프라인은 다음 분기에 탄탄합니다.','SALES'],
+ ['liquidity','n.','유동성','The company improved its liquidity by collecting overdue payments.','회사는 연체 대금을 회수해 유동성을 개선했습니다.','FINANCE'],
+ ['risk appetite','n.','위험 선호도, 감수할 위험 수준','The investment reflects our moderate risk appetite.','그 투자는 우리의 중간 수준 위험 선호도를 반영합니다.','RISK'],
+ ['sustainable','adj.','지속 가능한','We are looking for sustainable growth rather than quick wins.','우리는 단기 성과보다 지속 가능한 성장을 추구합니다.','STRATEGY'],
+ ['turnaround','n.','회복, 전환, 정상화','The new plan led to a rapid turnaround in performance.','새 계획은 성과의 빠른 회복을 이끌었습니다.','PERFORMANCE'],
+ ['value proposition','n.','가치 제안','Our value proposition is simple: reliable service at a fair price.','우리의 가치 제안은 공정한 가격의 신뢰할 수 있는 서비스입니다.','MARKETING'],
+ ['workforce','n.','인력, 노동력','We are planning training for the growing workforce.','우리는 늘어나는 인력을 위한 교육을 계획하고 있습니다.','PEOPLE']
+];
+const quizData=[[0,'accrue',['누적되다','위임하다','대조하다']],[7,'due diligence',['가치 제안','사전 조사·실사','병목']],[18,'value proposition',['지속 가능한 성장','위험 선호도','가치 제안']]];
+let state=JSON.parse(localStorage.getItem(DAY_KEY)||'{}'),filter='all';
+const today=new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Seoul',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
+document.title=`Wordroom · Day ${DAY_LABEL}`;document.getElementById('todayLabel').textContent=`오늘 · ${today.replaceAll('-','.')}`;
+function save(){localStorage.setItem(DAY_KEY,JSON.stringify(state));render()}
+function render(){const vals=Object.values(state),done=vals.filter(x=>x==='done').length,review=vals.filter(x=>x==='review').length;doneCount.textContent=done;reviewCount.textContent=review;leftCount.textContent=data.length-done;bar.style.width=`${done/data.length*100}%`;const list=data.map((w,i)=>({w,i})).filter(x=>filter==='all'||state[x.i]===filter);words.innerHTML=list.length?list.map(({w,i})=>{const s=state[i]||'';return `<article class="word"><div class="wordtop"><span class="num">${String(i+1).padStart(2,'0')}</span><span class="tag">${w[5]}</span></div><div class="en">${w[0]} <span class="pos">${w[1]}</span></div><div class="meaning">${w[2]}</div><div class="example">${w[3]}<em>${w[4]}</em></div><div class="actions"><button class="done ${s==='done'?'sel':''}" onclick="setStatus(${i},'done')">✅ 암기 완료</button><button class="review ${s==='review'?'sel':''}" onclick="setStatus(${i},'review')">🔁 다시 보기</button><button class="miss ${s==='miss'?'sel':''}" onclick="setStatus(${i},'miss')">⏳ 미완료</button></div></article>`}).join(''):'<div class="empty">이 카테고리에 단어가 없습니다.</div>'}
+function setStatus(i,s){state[i]=state[i]===s?'':s;save()}
+document.querySelectorAll('.tabs button[data-filter]').forEach(b=>b.onclick=()=>{document.querySelectorAll('.tabs button').forEach(x=>x.classList.remove('active'));b.classList.add('active');filter=b.dataset.filter;render()});
+quizBtn.onclick=()=>{quiz.classList.toggle('show');if(quiz.classList.contains('show'))makeQuiz()};
+function makeQuiz(){quizBody.innerHTML=quizData.map((q,n)=>{const correct=q[0]===0?0:q[0]===7?1:2;return `<div class="q">${n+1}. “${q[1]}”의 뜻은?</div><div class="answers">${q[2].map((a,i)=>`<button onclick="this.classList.add('${i===correct?'correct':'wrong'}')">${a}</button>`).join('')}</div>`}).join('')}
+render();
+</script></body>
+</html>
