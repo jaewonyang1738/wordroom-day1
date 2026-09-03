@@ -1,7 +1,7 @@
 {
-  "name": "Wordroom Day 04",
+  "name": "Wordroom Day 05",
   "short_name": "Wordroom",
-  "start_url": "./day4-vocab.html",
+  "start_url": "./day5-vocab.html",
   "display": "standalone",
   "background_color": "#f7f8f3",
   "theme_color": "#2f6b4f",

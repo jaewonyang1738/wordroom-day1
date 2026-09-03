@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Wordroom · Day 05</title>
+<link rel="manifest" href="wordroom-manifest.json">
+<meta name="theme-color" content="#2f6b4f">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Wordroom">
+<style>
+:root{--ink:#17211b;--muted:#718078;--paper:#f7f8f3;--card:#fff;--line:#e5e9e1;--green:#2f6b4f;--mint:#e7f0e8;--yellow:#f6e8b0;--red:#f8e2de;--shadow:0 10px 30px #2036290d}*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Pretendard",sans-serif}main{max-width:720px;margin:auto;padding:22px 18px 100px}.top{display:flex;justify-content:space-between;align-items:center}.brand{font-size:13px;letter-spacing:2px;font-weight:800;color:var(--green)}.day{font-size:13px;color:var(--muted)}h1{font-size:31px;line-height:1.15;margin:30px 0 8px;letter-spacing:-1px}p{color:var(--muted);margin:0}.hero{margin:26px 0 18px;background:var(--green);color:white;border-radius:24px;padding:22px;box-shadow:var(--shadow)}.hero p{color:#d8e7da;font-size:13px}.progress{height:7px;background:#ffffff30;border-radius:99px;margin-top:20px;overflow:hidden}.bar{height:100%;width:0;background:#f5df8d;border-radius:99px;transition:.3s}.stats{display:flex;gap:8px;margin-top:13px}.stat{font-size:12px;color:#e2eee3}.stat b{color:white;font-size:17px;margin-right:3px}.tabs{display:flex;gap:8px;overflow:auto;margin:22px 0 14px}.tabs button{border:1px solid var(--line);background:white;color:var(--muted);border-radius:99px;padding:10px 15px;white-space:nowrap;font-size:13px}.tabs button.active{background:var(--ink);color:white;border-color:var(--ink)}.word{background:var(--card);border:1px solid var(--line);border-radius:19px;padding:18px;margin:10px 0;box-shadow:var(--shadow)}.wordtop{display:flex;justify-content:space-between;align-items:flex-start}.num{font-size:12px;color:#9ba69f}.tag{font-size:11px;background:var(--mint);color:var(--green);padding:5px 8px;border-radius:7px}.en{font-size:22px;font-weight:800;margin:10px 0 3px}.pos{font-size:12px;color:var(--muted);font-weight:500}.meaning{font-size:14px;margin-bottom:12px}.example{background:#f7f8f4;border-radius:11px;padding:11px 12px;font-size:13px;line-height:1.5}.example em{display:block;color:var(--muted);margin-top:3px;font-style:normal}.actions{display:flex;gap:6px;margin-top:12px}.actions button{flex:1;border:1px solid var(--line);background:#fff;border-radius:10px;padding:9px 3px;font-size:11px}.actions .sel{background:var(--mint);border-color:#a8c8ae}.quiz{display:none;background:#fff;border:1px solid var(--line);border-radius:19px;padding:18px;margin-top:18px}.quiz.show{display:block}.quiz h2{margin:0 0 6px;font-size:20px}.q{font-weight:700;margin:18px 0 8px}.answers{display:flex;gap:6px;flex-wrap:wrap}.answers button{border:1px solid var(--line);background:#fff;border-radius:10px;padding:9px 10px;font-size:12px}.answers .correct{background:var(--mint);border-color:#76a981}.answers .wrong{background:var(--red);border-color:#d88c82}.empty{text-align:center;padding:35px;color:var(--muted)}.foot{text-align:center;color:var(--muted);font-size:12px;margin-top:20px}@media(min-width:600px){.words{display:grid;grid-template-columns:1fr 1fr;gap:10px}.word{margin:0}}
+</style>
+</head>
+<body><main>
+<div class="top"><div class="brand">WORDROOM</div><div class="day" id="todayLabel"></div></div>
+<h1 id="title">Day 05<br><span style="color:var(--green)">Finance & decision-making</span></h1>
+<p>재무 판단과 비즈니스 의사결정에서 바로 쓰는 핵심 단어 20개</p>
+<section class="hero"><p>오늘의 학습 진행률</p><div class="progress"><div class="bar" id="bar"></div></div><div class="stats"><span><b id="doneCount">0</b>완료</span><span><b id="reviewCount">0</b>다시 보기</span><span><b id="leftCount">20</b>남음</span></div></section>
+<div class="tabs"><button class="active" data-filter="all">전체 20</button><button data-filter="done">✅ 완료</button><button data-filter="review">🔁 다시 보기</button><button data-filter="miss">⏳ 미완료</button><button id="quizBtn">복습 퀴즈</button></div>
+<section class="words" id="words"></section>
+<section class="quiz" id="quiz"><h2>오늘의 미니 퀴즈</h2><p>단어를 실제 상황에서 떠올려보세요.</p><div id="quizBody"></div></section>
+<div class="foot">단어 상태는 이 기기에 자동 저장됩니다.</div>
+</main>
+<script>
+const DAY_NUMBER=5,DAY_LABEL=String(DAY_NUMBER).padStart(2,'0'),DAY_KEY='wordroom-day5';
+const data=[
+ ['capital','n.','자본, 자금','The company raised capital to open two new locations.','회사는 두 곳의 신규 매장을 열기 위해 자본을 조달했습니다.','FINANCE'],
+ ['dividend','n.','배당금','The board approved a higher dividend for shareholders.','이사회는 주주들을 위한 배당금 인상을 승인했습니다.','FINANCE'],
+ ['equity','n.','자기자본, 지분','The founders still hold a majority equity stake.','창업자들은 여전히 과반의 지분을 보유하고 있습니다.','FINANCE'],
+ ['portfolio','n.','투자 포트폴리오, 제품군','We are reviewing the portfolio before the next investment round.','다음 투자 라운드 전에 포트폴리오를 검토하고 있습니다.','STRATEGY'],
+ ['solvency','n.','지급 능력, 재무 건전성','The lender checked the company’s solvency before approving the loan.','대출 기관은 대출을 승인하기 전에 회사의 지급 능력을 확인했습니다.','FINANCE'],
+ ['amortize','v.','(부채·비용을) 상각하다','We amortize the software cost over three years.','소프트웨어 비용을 3년에 걸쳐 상각합니다.','FINANCE'],
+ ['depreciate','v.','감가상각되다, 가치가 떨어지다','Equipment depreciates over time, so we plan replacements carefully.','장비는 시간이 지나며 감가상각되므로 교체를 신중히 계획합니다.','FINANCE'],
+ ['liquidate','v.','청산하다, 현금화하다','The fund liquidated part of its position to reduce risk.','그 펀드는 위험을 줄이기 위해 보유 자산 일부를 현금화했습니다.','FINANCE'],
+ ['provision','n.','충당금, 대비책','We set aside a provision for potential warranty claims.','잠재적인 보증 청구에 대비해 충당금을 설정했습니다.','FINANCE'],
+ ['reimburse','v.','변제하다, 환급하다','The company will reimburse reasonable travel expenses.','회사는 합리적인 출장비를 환급해 드립니다.','PEOPLE'],
+ ['remittance','n.','송금액, 송금','Please include the invoice number with your remittance.','송금 시 청구서 번호를 함께 적어 주세요.','FINANCE'],
+ ['convene','v.','소집하다, 회의를 열다','The chair will convene a meeting to review the proposal.','의장은 제안서를 검토하기 위해 회의를 소집할 것입니다.','LEADERSHIP'],
+ ['endorse','v.','지지하다, 승인하다','The director endorsed the plan after reviewing the data.','이사는 데이터를 검토한 뒤 그 계획을 승인했습니다.','LEADERSHIP'],
+ ['ratify','v.','공식 승인하다, 비준하다','Both companies must ratify the agreement before it takes effect.','협정이 발효되기 전에 양사가 이를 공식 승인해야 합니다.','LEGAL'],
+ ['disclose','v.','공개하다, 밝히다','We are required to disclose any material risks to investors.','투자자에게 중대한 위험을 공개해야 합니다.','LEGAL'],
+ ['incentivize','v.','장려하다, 동기를 부여하다','The bonus is designed to incentivize repeat purchases.','그 보너스는 재구매를 장려하도록 설계되었습니다.','SALES'],
+ ['outsource','v.','외주를 주다','We decided to outsource payroll to a specialist firm.','급여 업무를 전문 업체에 외주 주기로 했습니다.','OPERATIONS'],
+ ['prospect','n.','잠재 고객, 가망 고객','The sales team followed up with every qualified prospect.','영업팀은 모든 적격 잠재 고객에게 후속 연락을 했습니다.','SALES'],
+ ['quota','n.','할당량, 판매 목표','Each regional team has a quarterly sales quota.','각 지역 팀에는 분기별 판매 목표가 있습니다.','SALES'],
+ ['commission','n.','수수료, 커미션','The contract specifies a five-percent commission on new accounts.','계약서에는 신규 계정에 대한 5% 수수료가 명시되어 있습니다.','SALES']
+];
+const quizData=[[0,'capital',['자본, 자금','수수료','지급 능력']],[7,'liquidate',['공식 승인하다','현금화하다','외주를 주다']],[18,'quota',['판매 목표','배당금','송금액']]];
+let state=JSON.parse(localStorage.getItem(DAY_KEY)||'{}'),filter='all';
+const today=new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Seoul',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
+document.title=`Wordroom · Day ${DAY_LABEL}`;document.getElementById('todayLabel').textContent=`오늘 · ${today.replaceAll('-','.')}`;
+function save(){localStorage.setItem(DAY_KEY,JSON.stringify(state));render()}
+function render(){const vals=Object.values(state),done=vals.filter(x=>x==='done').length,review=vals.filter(x=>x==='review').length;doneCount.textContent=done;reviewCount.textContent=review;leftCount.textContent=data.length-done;bar.style.width=`${done/data.length*100}%`;const list=data.map((w,i)=>({w,i})).filter(x=>filter==='all'||state[x.i]===filter);words.innerHTML=list.length?list.map(({w,i})=>{const s=state[i]||'';return `<article class="word"><div class="wordtop"><span class="num">${String(i+1).padStart(2,'0')}</span><span class="tag">${w[5]}</span></div><div class="en">${w[0]} <span class="pos">${w[1]}</span></div><div class="meaning">${w[2]}</div><div class="example">${w[3]}<em>${w[4]}</em></div><div class="actions"><button class="${s==='done'?'sel':''}" onclick="setStatus(${i},'done')">✅ 암기 완료</button><button class="${s==='review'?'sel':''}" onclick="setStatus(${i},'review')">🔁 다시 보기</button><button class="${s==='miss'?'sel':''}" onclick="setStatus(${i},'miss')">⏳ 미완료</button></div></article>`}).join(''):'<div class="empty">이 카테고리에 단어가 없습니다.</div>'}
+function setStatus(i,s){state[i]=state[i]===s?'':s;save()}
+document.querySelectorAll('.tabs button[data-filter]').forEach(b=>b.onclick=()=>{document.querySelectorAll('.tabs button').forEach(x=>x.classList.remove('active'));b.classList.add('active');filter=b.dataset.filter;render()});
+quizBtn.onclick=()=>{quiz.classList.toggle('show');if(quiz.classList.contains('show'))makeQuiz()};
+function makeQuiz(){quizBody.innerHTML=quizData.map((q,n)=>{const correct=q[0]===0?0:q[0]===7?1:0;return `<div class="q">${n+1}. “${q[1]}”의 뜻은?</div><div class="answers">${q[2].map((a,i)=>`<button onclick="this.classList.add('${i===correct?'correct':'wrong'}')">${a}</button>`).join('')}</div>`}).join('')}
+render();
+</script></body></html>
