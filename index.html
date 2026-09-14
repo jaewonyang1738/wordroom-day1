@@ -30,6 +30,7 @@
   <p id="subtitle">오늘도 20개씩, 꾸준히 쌓아요.</p>
   <button class="bigbtn" id="btnReview" onclick="startReview()">🔁 오늘 복습 <b id="dueN">0</b>개<small id="dueSub">복습할 단어가 없어요</small></button>
   <button class="bigbtn" id="btnNew" onclick="startNew()">📖 오늘의 새 단어<small id="newSub"></small></button>
+  <button class="bigbtn" id="btnWeak" onclick="startWeak()">📌 아직 못 외운 단어 <b id="weakN">0</b>개<small>'또 볼래요'로 표시한 단어를 모아 다시 봐요</small></button>
   <div class="hint">지난 날 다시 보기</div>
   <nav class="day-tabs" id="dayTabs"></nav>
 </div>
@@ -56,7 +57,8 @@ function addDays(k){var n=new Date();n.setDate(n.getDate()+k);return n.getFullYe
 function loadSrs(){try{return JSON.parse(localStorage.getItem('wr-srs')||'{}')}catch(e){return{}}}
 function saveSrs(o){try{localStorage.setItem('wr-srs',JSON.stringify(o))}catch(e){}}
 var srs=loadSrs();
-function grade(id,ok){var r=srs[id]||{box:0};var b=ok?Math.min(5,(r.box||0)+1):1;srs[id]={box:b,due:addDays(INT[b])};saveSrs(srs);bumpStreak();}
+function grade(id,ok){var r=srs[id]||{box:0};var b=ok?Math.min(5,(r.box||0)+1):1;srs[id]={box:b,due:addDays(INT[b]),again:!ok};saveSrs(srs);bumpStreak();}
+function weakList(){var out=[];for(var id in srs){if(srs[id]&&srs[id].again){var p=id.split(":"),dd=+p[0],ii=+p[1];if(days[dd]&&days[dd].words[ii])out.push({day:dd,i:ii,w:days[dd].words[ii]});}}return out;}
 function dueList(){var t=dnum(todayStr()),out=[];for(var id in srs){if(dnum(srs[id].due)<=t){var p=id.split(':'),dd=+p[0],ii=+p[1];if(days[dd]&&days[dd].words[ii])out.push({day:dd,i:ii,w:days[dd].words[ii]});}}return out;}
 function loadStreak(){try{return JSON.parse(localStorage.getItem('wr-streak')||'{}')}catch(e){return{}}}
 function bumpStreak(){var s=loadStreak(),ts=todayStr();if(s.last===ts)return;var t=dnum(ts);s.count=(s.last&&dnum(s.last)===t-86400000)?(s.count||0)+1:1;s.last=ts;try{localStorage.setItem('wr-streak',JSON.stringify(s))}catch(e){}renderStreak();}
@@ -67,7 +69,7 @@ var day=wrToday(),queue=[],qi=0,revealed=false,mode='review';
 
 function showHome(){day=wrToday();$('study').hidden=true;$('home').hidden=false;
   $('today').textContent='오늘 · '+new Date().toLocaleDateString('ko-KR');
-  var due=dueList();$('dueN').textContent=due.length;
+  var due=dueList();$('dueN').textContent=due.length;var weak=weakList();$('weakN').textContent=weak.length;
   $('dueSub').textContent=due.length?'회상 퀴즈로 기억을 굳혀요':'복습할 단어가 없어요 — 새 단어로!';
   $('newSub').textContent='Day '+String(day).padStart(2,'0')+' · '+days[day].name;
   renderStreak();
@@ -75,6 +77,7 @@ function showHome(){day=wrToday();$('study').hidden=true;$('home').hidden=false;
 }
 function beginStudy(label){$('home').hidden=true;$('study').hidden=false;$('studylabel').textContent=label;qi=0;showCard();}
 function startReview(){queue=dueList();if(!queue.length){showHome();return;}mode='review';beginStudy('🔁 오늘 복습');}
+function startWeak(){queue=weakList();if(!queue.length){showHome();return;}mode='weak';beginStudy('📌 아직 못 외운 단어');}
 function startNew(){day=wrToday();queue=days[day].words.map(function(w,i){return{day:day,i:i,w:w};});mode='new';beginStudy('📖 Day '+String(day).padStart(2,'0'));}
 function openDay(n){queue=days[n].words.map(function(w,i){return{day:n,i:i,w:w};});mode='new';beginStudy('Day '+String(n).padStart(2,'0'));}
 function showCard(){revealed=(mode==='new');renderCard();}
