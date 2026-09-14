@@ -33,6 +33,13 @@
   <button class="bigbtn" id="btnWeak" onclick="startWeak()">📌 아직 못 외운 단어 <b id="weakN">0</b>개<small>'또 볼래요'로 표시한 단어를 모아 다시 봐요</small></button>
   <div class="hint">지난 날 다시 보기</div>
   <nav class="day-tabs" id="dayTabs"></nav>
+  <div class="hint">기록 백업 / 복원</div>
+  <div style="display:flex;flex-direction:column;gap:8px">
+    <button class="bigbtn" style="padding:12px 16px;font-size:14px;margin:0" onclick="doBackup()">📤 내 기록 백업하기 (코드 복사)</button>
+    <textarea id="bkText" placeholder="백업 코드를 여기에 붙여넣고 아래 복원을 누르세요" rows="2" style="border:1px solid var(--line);border-radius:12px;padding:10px;font-size:12px;font-family:monospace"></textarea>
+    <button class="bigbtn" style="padding:12px 16px;font-size:14px;margin:0" onclick="doRestore()">📥 백업 코드로 복원하기</button>
+    <div id="bkMsg" style="color:var(--muted);font-size:13px;min-height:18px"></div>
+  </div>
 </div>
 
 <div id="study" class="view" hidden>
@@ -99,6 +106,8 @@ function renderCard(){
     : '';
   $('card').innerHTML='<article class="word"><div class="wordtop"><span>Day '+String(it.day).padStart(2,'0')+' · '+String(it.i+1).padStart(2,'0')+'</span><span class="tag">'+w[5]+'</span></div><div class="en">'+w[0]+' <span class="pos">'+w[1]+'</span></div>'+body+'<button class="spk" onclick="speak(\''+w[0]+'\')">🔊 발음</button>'+grades+'</article>';
 }
+function doBackup(){var p={v:1,srs:loadSrs(),streak:loadStreak(),ts:todayStr()};var code=btoa(unescape(encodeURIComponent(JSON.stringify(p))));var ta=$('bkText');if(ta)ta.value=code;try{navigator.clipboard.writeText(code);$('bkMsg').textContent='✅ 백업 코드를 복사했어요. 메모앱 등 안전한 곳에 붙여넣어 두세요.';}catch(e){if(ta){ta.focus();ta.select();}$('bkMsg').textContent='아래 코드를 길게 눌러 전체 복사해 두세요.';}}
+function doRestore(){var ta=$('bkText');var code=(ta&&ta.value||'').trim();if(!code){$('bkMsg').textContent='백업 코드를 먼저 붙여넣어 주세요.';return;}try{var p=JSON.parse(decodeURIComponent(escape(atob(code))));if(!p||!p.srs)throw 0;saveSrs(p.srs);if(p.streak)localStorage.setItem('wr-streak',JSON.stringify(p.streak));srs=loadSrs();$('bkMsg').textContent='✅ 복원 완료! 기록을 되살렸어요.';showHome();}catch(e){$('bkMsg').textContent='⚠️ 코드가 올바르지 않아요. 복사한 코드 전체를 다시 붙여넣어 주세요.';}}
 document.addEventListener('visibilitychange',function(){if(!document.hidden&&!$('home').hidden)showHome();});
 showHome();</script>
 </body>
